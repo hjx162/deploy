@@ -32,6 +32,7 @@ tags:
 - 本地项目根目录：`/Users/hjx/work/deploy/study`。
 - 学习笔记已迁移到 `study/YOLOX量化推理40天/`；仓库根目录就是 `study/`，代码、笔记、模型在同一个仓库里。
 - Obsidian vault 根目录也变成了 `study/`；在 Obsidian 里重新 **Open folder as vault**，选择 `/Users/hjx/work/deploy/study`。
+- 本地仓库已初始化：分支 `main`，首次提交已完成，`origin` 已指向上面的远程仓库；尚未 push。
 
 ## 一次性初始化（Mac）
 
@@ -67,6 +68,9 @@ build/
 .obsidian/workspace-mobile.json
 .obsidian/cache
 .obsidian/plugins/*/data.json
+
+# 子目录里的旧 vault 配置（当前 vault 根目录的 .obsidian 才需要同步）
+YOLOX量化推理40天/.obsidian/
 ```
 
 如果两台机器的换行/编码不一致，再加 `.gitattributes`：
