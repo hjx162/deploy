@@ -19,16 +19,20 @@ v5 改动: topo_sort 改为自包含修复版——入度只数"图内节点产�
   python numpy_framework.py
 """
 import json
+from pathlib import Path
+
 import numpy as np
 import numpy_ops as ops
 
 # ============ 1. 读图(模拟 ONNX Runtime 加载 ONNX) ============
-def load_graph(path='yolox_graph.json'):
+def load_graph(path=None):
     """读图文件, 转成内部表示: {node_name: {op, params, inputs, outputs}}。
 
     与真实 onnx.ModelProto.graph 同构: node 的 inputs/outputs 就是张量名列表。
     不预存 upstream——依赖关系只在 topo_sort 排序时按需推导(ONNX Runtime 同款设计)。
     """
+    if path is None:
+        path = Path(__file__).with_name('yolox_graph.json')
     with open(path) as f:
         proto = json.load(f)
 
