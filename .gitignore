@@ -1,0 +1,26 @@
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# 模型：ONNX 要同步；pth 不进 Git（推理不需要）
+模型/*.pth
+
+# 编译产物 / 临时文件
+build/
+**/*.o
+**/*.so
+**/*.log
+**/*.tmp
+
+# Obsidian 的机器相关状态
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/*/data.json
+
+# 子目录里的旧 vault 配置（当前 vault 根目录的 .obsidian 才需要同步）
+YOLOX量化推理40天/.obsidian/

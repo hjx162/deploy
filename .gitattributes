@@ -1,0 +1,4 @@
+* text=auto
+*.onnx binary
+*.pth binary
+*.npy binary

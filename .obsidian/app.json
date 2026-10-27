@@ -1,0 +1,11 @@
+{
+  "promptDelete": false,
+  "userIgnoreFilters": [
+    ".venv",
+    "模型",
+    "__pycache__",
+    "build",
+    "*.pth",
+    "*.onnx"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "说明": "模拟 ONNX 导出的 GRAPH 文件, 与真实 onnx.ModelProto.graph 完全同构。",
+  "格式": "graph{node列表(含权重输入) + initializer(权重形状声明) + input/output}。权重实际值存于 numpy 权重文件, 此文件只声明形状。",
+  "opset": 11,
+  "input": {"name": "images", "shape": [1, 3, 640, 640]},
+  "output": {"name": "output", "shape": null},
+  "initializer": [
+    {"name": "focus_w", "shape": null, "data_type": "none", "描述": "Slice无权重"},
+    {"name": "stem_conv_w", "shape": [32, 12, 3, 3], "data_type": "float32"},
+    {"name": "stem_bn_gamma", "shape": [32], "data_type": "float32"},
+    {"name": "stem_bn_beta", "shape": [32], "data_type": "float32"},
+    {"name": "stem_bn_mean", "shape": [32], "data_type": "float32"},
+    {"name": "stem_bn_var", "shape": [32], "data_type": "float32"},
+    {"name": "d2_conv_w", "shape": [64, 32, 3, 3], "data_type": "float32"},
+    {"name": "d2_bn_gamma", "shape": [64], "data_type": "float32"},
+    {"name": "d2_bn_beta", "shape": [64], "data_type": "float32"},
+    {"name": "d2_bn_mean", "shape": [64], "data_type": "float32"},
+    {"name": "d2_bn_var", "shape": [64], "data_type": "float32"}
+  ],
+  "node": [
+    {
+      "op_type": "Slice", "name": "focus_slice", "inputs": ["images"], "outputs": ["focus_out"],
+      "attribute": {}
+    },
+    {
+      "op_type": "Conv", "name": "stem_conv",
+      "inputs": ["focus_out", "stem_conv_w"],
+      "outputs": ["stem_conv_out"],
+      "attribute": {"kernel_shape": [3, 3], "strides": [1, 1], "pads": [1, 1, 1, 1], "group": 1}
+    },
+    {
+      "op_type": "BatchNormalization", "name": "stem_bn",
+      "inputs": ["stem_conv_out", "stem_bn_gamma", "stem_bn_beta", "stem_bn_mean", "stem_bn_var"],
+      "outputs": ["stem_bn_out"],
+      "attribute": {"epsilon": 1e-5}
+    },
+    {
+      "op_type": "SiLU", "name": "stem_silu", "inputs": ["stem_bn_out"], "outputs": ["stem_silu_out"],
+      "attribute": {}
+    },
+    {
+      "op_type": "Conv", "name": "d2_conv",
+      "inputs": ["stem_silu_out", "d2_conv_w"],
+      "outputs": ["d2_conv_out"],
+      "attribute": {"kernel_shape": [3, 3], "strides": [2, 2], "pads": [1, 1, 1, 1], "group": 1}
+    },
+    {
+      "op_type": "BatchNormalization", "name": "d2_bn",
+      "inputs": ["d2_conv_out", "d2_bn_gamma", "d2_bn_beta", "d2_bn_mean", "d2_bn_var"],
+      "outputs": ["d2_bn_out"],
+      "attribute": {"epsilon": 1e-5}
+    },
+    {
+      "op_type": "SiLU", "name": "d2_silu", "inputs": ["d2_bn_out"], "outputs": ["d2_silu_out"],
+      "attribute": {}
+    },
+    {
+      "op_type": "Output", "name": "output", "inputs": ["d2_silu_out"], "outputs": [],
+      "attribute": {}
+    }
+  ]
+}
