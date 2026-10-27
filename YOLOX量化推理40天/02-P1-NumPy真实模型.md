@@ -21,7 +21,7 @@ tags:
 > 本阶段全部在 Mac 上完成；不会用到 CUDA。双机同步见 [[11-双机Git工作流]]。
 
 > [!note] 手搓区
-> `核心框架/`、`算子演示/`、`验证工具/` 里的代码是你之前的草稿，不是第三方库。P1 的通用算子、im2col、执行器要你自己重写/扩展；现有 `numpy_ops.py` 只作为你自己早先版本的对拍参考。
+> `核心框架/`、`算子演示/`、`验证工具/` 里的代码是你之前的草稿，不是第三方库。P1 的通用算子、im2col、执行器要你自己重写/扩展；现有 `numpy_ops.py` 只读参考，不要直接调用或先跑它。
 
 ## 阶段目标
 
@@ -51,7 +51,8 @@ tags:
 
 ### D3 · 通用算子 + 单测
 
-- [ ] Conv：NCHW、bias、group、dilation、pads `[top,left,bottom,right]`、stride；先写朴素版。
+- [ ] 在新目录 `src/ops/` 下自己实现；旧 `numpy_ops.py` 只读参考，不直接修改或调用。
+- [ ] Conv：NCHW、bias、group、dilation、pads `[top,left,bottom,right]`、stride；自己先写朴素版。
 - [ ] Slice：starts/ends/axes/steps；处理 `INT64_MAX`；支持负 axis。
 - [ ] Concat：任意 axis；重点测 `axis=1` 和 `axis=-1`。
 - [ ] Add / Mul：支持广播。
@@ -66,13 +67,13 @@ tags:
 ### D4 · im2col + 向量化
 
 - [ ] 写 `im2col`：输入 (N,C,H,W)，输出 (N*H_out*W_out, C*kH*kW)，处理 pad/stride/dilation。
-- [ ] 卷积改成 `col @ W.reshape(C_out, -1).T + bias`。
+- [ ] 把你 D3 自己写的卷积改成 `col @ W.reshape(C_out, -1).T + bias`。
 - [ ] 用 `np.ascontiguousarray` 避免 matmul 前的隐式拷贝。
 - [ ] 向量化 Sigmoid/Add/Mul/Concat/Slice，去掉逐元素 Python 循环。
-- [ ] 在小层（如 1×3×32×32）上对比 naive vs im2col vs ORT。
+- [ ] 在小层（如 1×3×32×32）上对比你自己新写的 naive vs im2col vs ORT。
 - [ ] 在真实层（如 stem 3×3、80×80 的 3×3）上测耗时和内存。
 
-**完成标志**：单层误差 < 1e-5；im2col 版本比 naive 快至少一个数量级；知道 im2col 的峰值内存。
+**完成标志**：单层误差 < 1e-5；im2col 版本比你自己写的 naive 快至少一个数量级；知道 im2col 的峰值内存。
 
 ### D5 · 真实权重 + 全图对拍
 

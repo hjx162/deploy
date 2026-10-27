@@ -31,14 +31,15 @@ pip install -r requirements.txt
 
 `.venv/` 是本机环境，不进 Git。换到 N 卡机器后必须重建，不要复制。
 
-## 快速检查
+## 环境检查
 
 ```bash
-python 核心框架/numpy_framework.py
-PYTHONPATH=核心框架 python 验证工具/test_ops.py
+python -c "import numpy, onnx, onnxruntime; print(numpy.__version__, onnx.__version__, onnxruntime.__version__)"
 ```
 
-这两条只验证 stem 玩具图和基础算子，不代表真实 YOLOX 已跑通。
+## 旧草稿参考
+
+`核心框架/`、`算子演示/`、`验证工具/`、`DAG学习/` 是早期手搓草稿，可以阅读参考，但**不要直接把它们当学习步骤或依赖跑**。学习任务从 P0 开始：先自己写新的 `tools/`、`src/`、`tests/`，再和旧草稿/ORT 对照。
 
 ## 模型事实
 
